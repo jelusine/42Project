@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/05/10 16:25:37 by jelusine         ###   ########.fr        #
+#    Updated: 2018/07/16 02:33:05 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -85,11 +85,7 @@ SRCC =	ft_abs.c\
 
 LAG = -Wall -Werror -Wextra
 
-PATH_OBJ = objet/
-
 SRCO = $(SRCC:.c=.o)
-
-SRCO_POS = $(addprefix $(PATH_OBJ),$(SRCO))
 
 NAME = libft.a
 
@@ -101,9 +97,6 @@ $(NAME): $(SRCO)
 %.o: %.c
 	gcc $(LAG) -c $<
 
-$(PATH_OBJ):
-	mkdir $@
-
 clean:
 	rm -rf $(SRCO)
 
@@ -111,3 +104,5 @@ fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re
