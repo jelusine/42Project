@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 18:18:28 by jelusine          #+#    #+#             */
-/*   Updated: 2018/05/10 16:22:34 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/07/16 02:42:13 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+# define BUFF_SIZE 8
 # define NL ft_putchar('\n');
 # define TEST0 ft_putendl("Test");
 # define TEST1 ft_color("**Test1**\n", "g");
@@ -113,6 +114,7 @@ int				ft_max(int x, int y);
 int				ft_charcmpstr(char c, const char *str);
 int				ft_analyse_base(const char *str);
 int				ft_atoi_base(const char *str, const char *base);
+int				get_next_line(int fd, char **line);
 char			*ft_itoa_base(int nb, int base);
 char			**ft_split(const char *str, char *kwords);
 void			ft_putnbr_base(int nbr, const char *base);

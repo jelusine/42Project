@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/07/16 02:33:05 by jelusine         ###   ########.fr        #
+#    Updated: 2018/07/16 02:40:54 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,7 +81,8 @@ SRCC =	ft_abs.c\
 		ft_strsub.c\
 		ft_strtrim.c\
 		ft_tolower.c\
-		ft_toupper.c
+		ft_toupper.c\
+		get_next_line.c
 
 LAG = -Wall -Werror -Wextra
 
