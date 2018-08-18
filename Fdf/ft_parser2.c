@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 09:05:56 by jelusine          #+#    #+#             */
-/*   Updated: 2018/07/15 21:06:29 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/08/14 13:27:49 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ void		ft_set_npoint(t_test *test, float z, float cst)
 	float		ymax;
 	float		tmp;
 	const int	nwidth = WIDTH / (test->grid->lenx + test->grid->leny);
-	const int	nheight = HEIGHT / (test->grid->lenx + test->grid->leny);
+	float			nheight = HEIGHT / (test->grid->lenx + test->grid->leny);
 
+	ft_putnbr(nheight * 100); TEST3
 	test->grid->cstc += cst;
 	test->grid->zc += z;
 	tmp = (((TABP[test->grid->leny - 1][0].x) -
@@ -37,54 +38,40 @@ void		ft_set_npoint(t_test *test, float z, float cst)
 	ymax = 0;
 	y = -1;
 	ecart = (WIDTH % (test->grid->lenx + test->grid->leny)) / 2;
-	TEST2
-	ft_putstr("long larg: ");
-	ft_putnbr(test->grid->lenx + test->grid->leny); NL
-	ft_putstr("ecart prop: ");
-	ft_putnbr(nwidth); NL
-	ft_putstr("reste: ");
-	ft_putnbr(ecart); NL
+	ft_putnbr(ecart); TEST3
+	if (nheight < 1)
+	{
+		TEST2
+		nheight = 0.7;
+		ecart = 0;
+	}
+//	ft_putnbr(HEIGHT); TEST3
+//	ft_putnbr(test->grid->lenx + test->grid->leny); TEST3
 	while (++y < test->grid->leny)
 	{
 		x = -1;
 		while (++x < test->grid->lenx)
 		{
 			TABP[y][x].xa = (((TABP[y][x].x) - (TABP[y][x].y)) *
-					(test->grid->cstc)) + ((x + test->grid->leny - y + 1) * nwidth)
-					- tmp + ecart;
-//			ft_putnbr(TABP[y][x].xa);
-//			ft_putchar(' ');
-//			ft_putnbr(((int)(TABP[y][x].xa * 1000)) % 1000); NL
+				(test->grid->cstc)) + ((x + test->grid->leny - y) * nwidth)
+					- tmp/* + ecart*/ + 1;
 			TABP[y][x].ya = (((TABP[y][x].x + TABP[y][x].y) *
 				(test->grid->cstc / 2)) - (TABP[y][x].z * test->grid->zc))
-				+ ((x + y + 1) * nheight);
+				+ ((x + y) * nheight);
 			ymax = (TABP[y][x].ya > ymax ? TABP[y][x].ya : ymax);
 			ymin = (TABP[y][x].ya < ymin ? TABP[y][x].ya : ymin);
 		}
 	}
-	ft_putnbr(WIDTH - TABP[0][test->grid->lenx - 1].xa); NL
 	TIP.width = TABP[0][test->grid->lenx - 1].xa -
 		TABP[test->grid->leny - 1][0].xa + nwidth + 2 * ecart;
-	ft_putstr("taille img: ");
-	ft_putnbr(TIP.width); NL
-	TEST4
 	ecart = HEIGHT % (test->grid->lenx + test->grid->leny) / 2;
 	y = -1;
 	while (++y < test->grid->leny)
 	{
 		x = -1;
 		while (++x < test->grid->lenx)
-		{
 			TABP[y][x].ya += nheight + ecart - ymin;
-			if (TABP[y][x].z == 0 && TIP.ref.x < 0)
-			{
-				TIP.ref.y = y;
-				TIP.ref.x = x;
-			}
-		}
 	}
-	if (TIP.ref.x < 0)
-		TIP.ref.y = 0 + ++TIP.ref.x;
 	TIP.height = ymax - ymin + nheight + 2 * ecart;
 }
 
@@ -92,9 +79,11 @@ void		ft_affiche_point(t_test test)
 {
 	int			y;
 	int			x;
-//	const int	ecart = (WIDTH % (test.grid->lenx + test.grid->leny)) / 2;
-//	const int	nwidth = WIDTH / (test.grid->lenx + test.grid->leny);
 
+	trace_ligne(0, 0, TI.width, 0, &test, 0xffffff, 0);
+	trace_ligne(0, 0, 0, TI.height, &test, 0xffffff, 0);
+	trace_ligne(TI.width - 1, 0, TI.width - 1, TI.height - 1, &test, 0xffffff, 0);
+	trace_ligne(0, TI.height - 1, TI.width, TI.height - 1, &test, 0xffffff, 0);
 	y = -1;
 	while (++y < test.grid->leny)
 	{
@@ -102,19 +91,13 @@ void		ft_affiche_point(t_test test)
 		while (++x < test.grid->lenx)
 		{
 			if (x > 0)
-				trace_ligne(/*TAB[y][x - 1].pa, TAB[y][x].pa*/TAB[y][x - 1].xa, TAB[y][x - 1].ya,TAB[y][x].xa,TAB[y][x].ya, &test,
-					(TAB[y][x].z || TAB[y][x - 1].z ? 0xff00ff : 0xff8c00), 0);
+				trace_ligne(/*TAB[y][x - 1].pa, TAB[y][x].pa*/TAB[y][x - 1].xa,
+						TAB[y][x - 1].ya,TAB[y][x].xa,TAB[y][x].ya, &test,
+					(TAB[y][x].z || TAB[y][x - 1].z ? TI.col[0] : TI.col[1]), 0);
 			if (y > 0)
-				trace_ligne(/*TAB[y - 1][x].pa, TAB[y][x].pa*/TAB[y - 1][x].xa,TAB[y - 1][x].ya,TAB[y][x].xa, TAB[y][x].ya, &test,
-					(TAB[y][x].z || TAB[y - 1][x].z ? 0xff00ff : 0xff8c00), 0);
+				trace_ligne(/*TAB[y - 1][x].pa, TAB[y][x].pa*/TAB[y - 1][x].xa,
+						TAB[y - 1][x].ya,TAB[y][x].xa, TAB[y][x].ya, &test,
+					(TAB[y][x].z || TAB[y - 1][x].z ? TI.col[0] : TI.col[1]), 0);
 		}
 	}
-/*	y = 0;
-	x = test.grid->lenx + test.grid->leny;
-	while (++y < x)
-	{
-		trace_ligne((y + 0) * nwidth + ecart, 0, (y + 0) * nwidth + ecart, TI.height - 5,&test, 0xff8c22, 0);
-		TEST5
-		ft_putnbr(y * nwidth + ecart); NL
-	}*/
 }

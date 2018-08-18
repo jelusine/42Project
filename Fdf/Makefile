@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 13:05:27 by jelusine          #+#    #+#              #
-#    Updated: 2018/07/16 02:52:41 by jelusine         ###   ########.fr        #
+#    Updated: 2018/08/18 23:28:46 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,17 +28,19 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C libft
 	make -C minilibx_macos
-	gcc $(FLAG) $(OBJ) -L minilibx_macos -lmlx -L libft -l ft $(FLAGS) -I minilibx_macos -g -fsanitize=address
+	gcc $(FLAG) -o $(NAME) $(OBJ) -L minilibx_macos -lmlx -L libft -l ft $(FLAGS) -I minilibx_macos -g -fsanitize=address
 
 %.o: %.c
 	gcc $(FLAG) -c $<
 
 clean:
+	make clean -C libft
 	rm -rf $(OBJ)
 
 fclean: clean
+	make fclean -C libft
 	rm -rf $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re fdf

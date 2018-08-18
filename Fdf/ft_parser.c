@@ -6,13 +6,28 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 09:05:56 by jelusine          #+#    #+#             */
-/*   Updated: 2018/07/08 12:41:14 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/08/08 07:47:17 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./fdf.h"
 
-t_point		**ft_fill(t_point **tab, t_list *lst, int lenx)
+int			ft_ref(void *ptr, t_point *p)
+{
+	t_test *test;
+
+	test = ptr;
+	if (!p && TIP.ref.x < 0)
+		TIP.ref.y = ++TIP.ref.x;
+	else if (TIP.ref.x < 0 && p && !p->z)
+	{
+		TIP.ref.x = p->x;
+		TIP.ref.y = p->y;
+	}
+	return (0);
+}
+
+t_point		**ft_fill(t_point **tab, t_list *lst, int lenx, t_test *test)
 {
 	int			y;
 	int			x;
@@ -29,20 +44,21 @@ t_point		**ft_fill(t_point **tab, t_list *lst, int lenx)
 		if (!(tab[y] = (t_point *)malloc(sizeof(t_point) * (lenx))))
 			return (NULL);
 		x = -1;
-		while (++x < lenx)
-		{
-			tab[y][x].y = y;
-			tab[y][x].x = x;
-			tab[y][x].z = (tmpnb[x] ? ft_atoi(tmpnb[x]) : 0);
+		while (++x < lenx &&
+				(tab[y][x].y = y) > -1 &&
+				(tab[y][x].x = x) > -1 &&
+				((tab[y][x].z = (tmpnb[x] ? ft_atoi(tmpnb[x]) : 0)) || 1) &&
+				!ft_ref(test, &tab[y][x]))
 			if (tmpnb[x])
 				ft_strdel(&tmpnb[x]);
-		}
 	}
+	ft_ref(test, NULL);
 	return (tab);
 }
 
-t_gridpnt	*ft_osef(t_list *lst, int lenx, int leny)
+t_gridpnt	*ft_osef(t_list *lst, int lenx, int leny, t_test *test)
 {
+	int			i;
 	t_gridpnt	*grid;
 	t_point		**tab;
 
@@ -54,8 +70,18 @@ t_gridpnt	*ft_osef(t_list *lst, int lenx, int leny)
 		return (NULL);
 	grid->cstc = CST2;
 	grid->zc = 0;
-	if (!(grid->tab = ft_fill(tab, lst, grid->lenx)))
+	if (!(grid->tab = ft_fill(tab, lst, grid->lenx, test)))
 		return (NULL);
+	i = 0;
+	test->pzoom = leny * lenx;
+	while (test->pzoom >= 1)
+	{
+		test->pzoom /= 10;
+		i++;
+	}
+	test->pzoom = (i >= 5 ? 1 : 0);
+	ft_putnbr(test->pzoom); NL
+//	ft_putnbr(test->pzoom + 1); NL
 	return (grid);
 }
 
@@ -80,7 +106,7 @@ int			compt_ward(char *str)
 	return (nw);
 }
 
-t_gridpnt	*ft_parser(char *path)
+t_gridpnt	*ft_parser(char *path, t_test *test)
 {
 	int			fd;
 	int			n;
@@ -101,7 +127,11 @@ t_gridpnt	*ft_parser(char *path)
 		ft_strdel(&line);
 	}
 	close(fd);
+	test->lim = 5711 * (pow(len.x * len.y, -0.478)) * 0.5;
+	test->limmin = -1385 * (pow(len.x * len.y, -0.566)) * 0.7;
+	ft_putnbr(len.x * len.y);
+	TEST1
 	if (n >= 0)
-		return (ft_osef(save, len.x, len.y));
+		return (ft_osef(save, len.x, len.y, test));
 	return (NULL);
 }
