@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/03 18:18:28 by jelusine          #+#    #+#             */
-/*   Updated: 2018/07/16 02:42:13 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/08/21 00:09:00 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ int				ft_charcmpstr(char c, const char *str);
 int				ft_analyse_base(const char *str);
 int				ft_atoi_base(const char *str, const char *base);
 int				get_next_line(int fd, char **line);
+int				ft_errormsg(char const *str);
 char			*ft_itoa_base(int nb, int base);
 char			**ft_split(const char *str, char *kwords);
 void			ft_putnbr_base(int nbr, const char *base);

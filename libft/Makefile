@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/07/16 02:40:54 by jelusine         ###   ########.fr        #
+#    Updated: 2018/08/21 00:09:27 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCC =	ft_abs.c\
 		ft_charcmpstr.c\
 		ft_charcolor.c\
 		ft_color.c\
+		ft_errormsg.c\
 		ft_isalnum.c\
 		ft_isalpha.c\
 		ft_isascii.c\
