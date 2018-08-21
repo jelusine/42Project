@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/08/21 00:09:27 by jelusine         ###   ########.fr        #
+#    Updated: 2018/08/21 03:13:33 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,6 +81,7 @@ SRCC =	ft_abs.c\
 		ft_strstr.c\
 		ft_strsub.c\
 		ft_strtrim.c\
+		ft_swap.c\
 		ft_tolower.c\
 		ft_toupper.c\
 		get_next_line.c
