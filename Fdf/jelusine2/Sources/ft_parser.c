@@ -6,11 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/22 09:05:56 by jelusine          #+#    #+#             */
-/*   Updated: 2018/10/24 06:29:27 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/11/20 01:51:01 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./fdf.h"
+#include "../Includes/fdf.h"
 
 int			ft_ref(void *ptr, t_point *p, int x, int y)
 {
@@ -96,7 +96,7 @@ int			compt_ward(char *str)
 			i++;
 		if (ft_charcmpstr(str[i], "0123456789") >= 0
 				|| (ft_charcmpstr(str[i], "+-") >= 0
-					&& ft_charcmpstr(str[i + 1], "0123456789") >= 0) || !str[i])
+				&& ft_charcmpstr(str[i + 1], "0123456789") >= 0) || !str[i])
 		{
 			while (str[i] != ' ' && str[i])
 				if (str[++i] == ' ' || !str[i])
@@ -122,7 +122,8 @@ t_gridpnt	*ft_parser(char *path, t_test *test)
 	tfd[0] = 1;
 	if ((tfd[1] = open(path, O_RDONLY)) == -1)
 		return (NULL);
-	while (tfd[0] * len.y >= 0 && (len.z = get_next_line(tfd[1], &line)) > 0)
+	while (tfd[0] >= 0 && len.y >= 0
+			&& (len.z = get_next_line(tfd[1], &line)) > 0)
 	{
 		len.y = (-1 < len.y && len.y < 2000 ? len.y + 1 : -1);
 		len.x = ft_max(len.x,
@@ -130,10 +131,7 @@ t_gridpnt	*ft_parser(char *path, t_test *test)
 		ft_lstaddend(&save, ft_lstnew(line, ft_strlen(line) + 1));
 		ft_strdel(&line);
 	}
-	close(tfd[1]);
-	test->lim = 5711 * (pow(len.x * len.y, -0.478)) * 0.5;
-	test->limmin = -1385 * (pow(len.x * len.y, -0.566)) * 0.7;
-	if (len.z >= 0 && tfd[0] >= 0 && len.x > 0 && len.y > 0)
+	if (!close(tfd[1]) && len.z >= 0 && tfd[0] >= 0 && len.x > 0 && len.y > 0)
 		return (ft_osef(save, len.x, len.y, test));
 	return (NULL);
 }

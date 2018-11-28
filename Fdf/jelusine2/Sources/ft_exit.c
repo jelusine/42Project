@@ -6,11 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/11 01:53:11 by jelusine          #+#    #+#             */
-/*   Updated: 2018/10/20 02:40:27 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/11/16 23:50:02 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./fdf.h"
+#include "../Includes/fdf.h"
 
 int		ft_exit(int key, void *ptr)
 {

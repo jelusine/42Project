@@ -6,11 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/14 13:11:50 by jelusine          #+#    #+#             */
-/*   Updated: 2018/10/24 06:56:46 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/11/16 23:50:34 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./fdf.h"
+#include "../Includes/fdf.h"
 
 int		ft_mouse(int key, int x, int y, void *ptr)
 {
@@ -25,7 +25,7 @@ int		ft_mouse(int key, int x, int y, void *ptr)
 		test->locky = y - TIP.pos[1];
 	else if (test->lock % 2 == 0 && (test->lock = -ft_abs(test->lock)))
 		ft_paintashier(key, coor, ptr, &nk[1]);
-	else if ((key == 4 && TGP->cstc < 7)
+	else if ((key == 4 && TGP->cstc < 5)
 			|| (key == 5 && TGP->cstc > 0.01))
 	{
 		told[1].x = TIP.wihei[0];
@@ -129,21 +129,27 @@ int		main(int ac, char **av)
 {
 	t_test	test;
 
-	test.mlx_ptr = mlx_init();
-	test.win_ptr = mlx_new_window(test.mlx_ptr, WIDTH, HEIGHT,
-			(ac == 2 ? av[1] : "Test"));
-	test.bold = 0;
-	test.grid = NULL;
-	test.lock = -2;
-	test.img.col[0] = 0xff0000;
-	test.img.col[1] = 0x00ffff;
-	if (ac == 2 && !ft_set_map(&test, av[1]))
+	if (ac == 2
+		|| (ac == 3 && !ft_strcmp(av[1], "-D") && !ft_strcmp(av[2], "Paint")))
+	{
+		test.mlx_ptr = mlx_init();
+		test.win_ptr = mlx_new_window(test.mlx_ptr, WIDTH, HEIGHT,
+				av[1 + ac % 2]);
+		test.bold = 0;
+		test.grid = NULL;
+		test.lock = -2;
+		test.img.col[0] = 0xff0000;
+		test.img.col[1] = 0x00ffff;
+		if (ac == 2 && !ft_set_map(&test, av[1]))
+			return (0);
+		mlx_hook(test.win_ptr, 2, 1, ft_keyboard, &test);
+		mlx_mouse_hook(test.win_ptr, ft_mouse, &test);
+		mlx_hook(test.win_ptr, 6, 1L << 8, ft_tracking, &test);
+		mlx_hook(test.win_ptr, 17, 0, ft_exit, 0);
+		mlx_loop_hook(test.mlx_ptr, ptit_test, &test);
+		mlx_loop(test.mlx_ptr);
 		return (0);
-	mlx_hook(test.win_ptr, 2, 1, ft_keyboard, &test);
-	mlx_mouse_hook(test.win_ptr, ft_mouse, &test);
-	mlx_hook(test.win_ptr, 6, 1L << 8, ft_tracking, &test);
-	mlx_hook(test.win_ptr, 17, 0, ft_exit, 0);
-	mlx_loop_hook(test.mlx_ptr, ptit_test, &test);
-	mlx_loop(test.mlx_ptr);
-	return (0);
+	}
+	else
+		return (ft_errormsg("usage:\tfdf file_name\n\tfdf -D Paint\n"));
 }

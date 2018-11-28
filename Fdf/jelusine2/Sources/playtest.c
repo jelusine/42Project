@@ -6,11 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/23 23:52:49 by jelusine          #+#    #+#             */
-/*   Updated: 2018/10/20 06:42:49 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/11/16 23:50:45 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./fdf.h"
+#include "../Includes/fdf.h"
 
 void	ft_tracecrox(int pnt[2], void *ptr, int color, int bold)
 {

@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/14 13:12:30 by jelusine          #+#    #+#             */
-/*   Updated: 2018/10/24 06:56:45 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/11/16 23:15:38 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include <math.h>
 # include <fcntl.h>
-# include "./libft/libft.h"
-# include "./minilibx_macos/mlx.h"
+# include "../libft/libft.h"
+# include "../minilibx_macos/mlx.h"
 # define CHCOL 51
 # define WIDTH 15 * PIX * 5
 # define HEIGHT 9 * PIX * 5
