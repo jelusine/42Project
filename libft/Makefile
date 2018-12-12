@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/08/21 03:13:33 by jelusine         ###   ########.fr        #
+#    Updated: 2018/12/12 22:25:39 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,16 +95,19 @@ NAME = libft.a
 all: $(NAME)
 
 $(NAME): $(SRCO)
-	ar rcs $@ $(SRCO)
+	@ar rcs $@ $(SRCO)
+	@echo "\033[32m$(NAME) Ready !\033[0m\n"
 
 %.o: %.c
-	gcc $(LAG) -c $<
+	@gcc $(LAG) -c $<
 
 clean:
-	rm -rf $(SRCO)
+	@echo "\033[31mLibft: Obj Deleted\033[0m\n"
+	@rm -rf $(SRCO)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
+	@echo "\033[31m$(NAME) Deleted\033[0m\n"
 
 re: fclean all
 

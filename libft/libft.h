@@ -13,7 +13,6 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 
-# include <unistd.h>
 # include <stdlib.h>
 # define BUFF_SIZE 8
 # define NL ft_putchar('\n');

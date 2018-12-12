@@ -6,11 +6,9 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/10 21:01:35 by jelusine          #+#    #+#             */
-/*   Updated: 2018/04/07 18:13:57 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/12/12 21:34:17 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "./libft.h"
 
 int		ft_charcmpstr(char c, const char *str)
 {

@@ -6,10 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/21 00:07:55 by jelusine          #+#    #+#             */
-/*   Updated: 2018/08/21 00:08:32 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/12/12 21:35:51 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "./libft.h"
 
 int		ft_errormsg(char const *str)

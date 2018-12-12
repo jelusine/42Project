@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <unistd.h>
 #include "./libft.h"
 
 static	t_list	*ft_new_lst(size_t fd)
