@@ -6,12 +6,13 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/14 13:05:27 by jelusine          #+#    #+#              #
-#    Updated: 2018/11/25 08:15:30 by jelusine         ###   ########.fr        #
+#    Updated: 2018/12/03 08:31:13 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC =	main.c\
-		efrac_calc.c
+		ft_frac_calc.c\
+		ft_event.c
 
 SRC_DIR = ./Sources/
 
