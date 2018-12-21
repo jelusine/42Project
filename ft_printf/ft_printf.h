@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/21 02:35:07 by jelusine          #+#    #+#             */
-/*   Updated: 2018/12/21 02:41:06 by jelusine         ###   ########.fr       */
+/*   Updated: 2018/12/21 02:56:14 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "./libft/libft.h"
 # include <stdio.h>
-# include <unitd.h>
+# include <unistd.h>
 # include <stdarg.h>
 
 typedef struct	s_pfs
