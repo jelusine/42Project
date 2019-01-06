@@ -24,52 +24,52 @@ void	fnc_str(t_pfs *pfs)
 {
 	char 	*s;
 	int		l;
-	int		n;
 
 	s = va_arg(pfs->ap, typeof(s));
-	n = pfs->pad - ft_strlen(s);
-	if (!(pfs->key & 0x08) && pfs->pad > -1)
-	{
-		while (n-- > 0)
-			ft_putchar(' ');
-	}
 	if ((l = ft_strlen(s)) > pfs->prec && pfs->prec >= 0)
 		l = pfs->prec;
-	if (pfs->pad < 0)
-		pfs->len += l;
+	pfs->pad -= l;
+	pfs->len += l + ft_max(pfs->pad, 0);
+	if (!(pfs->key & 0x08) && pfs->pad > -1)
+	{
+		while (pfs->pad-- > 0)
+			ft_putchar(' ');
+	}
 	write(1, s, l);
-	while (n-- > 0)
+	while (pfs->pad-- > 0)
 		ft_putchar(' ');
 }
 
 void	fnc_int(t_pfs *pfs)
 {
 	int d;
-	int n;
 
 	d = va_arg(pfs->ap, typeof(d));
-	if (d < 0 || pfs->key & 0x20 || pfs->key & 0x10)
+	if ((d < 0 || pfs->key & 0x30) && ++pfs->len)
 		pfs->pad--;
-	n = pfs->pad - ft_max(pfs->prec, ft_nb_len(d, 10));
-	if (!(pfs->key & 0x40) && pfs->pad > -1 && !(pfs->key & 0x08))
+	pfs->pad -= ft_max(pfs->prec, ft_nb_len(d, 10));
+	pfs->len += ft_max(pfs->pad, 0) + ft_max(pfs->prec, ft_nb_len(d, 10)) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
-		while (n-- > 0)
+		while (pfs->pad-- > 0)
 			ft_putchar(' ');
 	}
-	if ((pfs->key & 0x20 || pfs->key & 0x10) && d > 0)
+	if (pfs->key & 0x30 && d >= 0)
 		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
 	if (pfs->prec > -1 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
-		if (pfs->prec > -1)
-			n = pfs->prec - ft_nb_len(d, 10);
-		while (n-- > 0)
+		pfs->prec -= ft_nb_len(d, 10);
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		if (d < 0 && (d *= -1))
+			ft_putchar('-');
+		while (pfs->prec-- > 0)
 			ft_putchar('0');
 	}
-	ft_putnbr(d);
-	while (n-- > 0)
+	if (pfs->prec != 0 && ++pfs->len)
+		ft_putnbr(d);
+	while (pfs->pad-- > 0)
 		ft_putchar(' ');
-	if (pfs->pad < 0)
-		pfs->len += ft_max(pfs->prec, ft_nb_len(d, 10)) + (pfs->key & 0x20) / 0x20 + (pfs->key & 0x10) / 0x10;
 }
 
 void	ft_putinfnbr(long long int l)
@@ -148,30 +148,31 @@ void	fnc_lhexa(t_pfs *pfs)
 
 void	fnc_hexa(t_pfs *pfs, int i)
 {
-	int					h;
-	int					n;
+	unsigned int			h;
 	static const char	*str[4] = {"0123456789ABCDEF", "0123456789abcdef",
 		"0X", "0x"};
 
-	h = va_arg(pfs->ap, int);
-	pfs->pad -= 2 * (pfs->key & 0x80) / 128;
-	n = pfs->pad - ft_max(pfs->prec, ft_nb_len(h, 16));
+	if ((h = va_arg(pfs->ap, typeof(h))) && pfs->key & 0x80)
+		pfs->pad -= 2;
+	pfs->pad -= ft_max(pfs->prec, ft_nb_len(h, 16));
+	pfs->len += ft_max(pfs->prec, ft_nb_len(h, 16)) + ft_max(pfs->pad, 0);
 	if (!(pfs->key & 0x40) && pfs->pad && !(pfs->key & 0x08))
 	{
-		while (n-- > 0)
+		while (pfs->pad-- > 0)
 			ft_putchar(' ');
 	}
-	if (pfs->key & 0x80)
+	if (h && pfs->key & 0x80 && (pfs->len += 2))
 		write(1, str[i + 2], 2);
 	if (pfs->prec > -1 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
-		if (pfs->prec > -1)
-			n = pfs->prec - ft_nb_len(h, 16);
-		while (n-- > 0)
+		pfs->prec -= ft_nb_len(h, 16);
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		while (pfs->prec-- > 0)
 			ft_putchar('0');
 	}
 	ft_putnbr_base(h, str[i]);
-	while (n-- > 0)
+	while (pfs->pad-- > 0)
 		ft_putchar(' ');
 }
 

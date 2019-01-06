@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/06 05:04:17 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/06 03:05:10 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/06 06:18:56 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			if (str[n] == '0' && pfs->prec < 0 && !(pfs->key & 0x08))
 				pfs->key = pfs->key | 0x40;
 			pfs->pad = ft_atoi(&str[n]);
-			pfs->len += pfs->pad;
 			n += ft_nb_len(pfs->pad, 10) - 1;
 		}
 		else if (str[n] == '+')
