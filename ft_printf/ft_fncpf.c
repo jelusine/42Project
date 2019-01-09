@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/06 02:10:00 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 05:54:06 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 06:00:26 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,11 @@ void	fnc_char(t_pfs *pfs)
 			ft_putchar(32 + (pfs->key & 0x40) / 4);
 	}
 	ft_putchar(c);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	fnc_str(t_pfs *pfs)
 {
-	char 	*s;
+	char	*s;
 	int		l;
 
 	if (!(s = va_arg(pfs->ap, typeof(s))) && (pfs->len += 6))
@@ -49,15 +47,13 @@ void	fnc_str(t_pfs *pfs)
 	if ((l = ft_strlen(s)) > pfs->prec && pfs->prec >= 0)
 		l = pfs->prec;
 	pfs->pad -= l;
-	pfs->len += l + ft_max(pfs->pad, 0);
+	pfs->len += l + ft_max(pfs->pad,  0);
 	if (!(pfs->key & 0x08) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
 			ft_putchar(32 + (pfs->key & 0x40) / 4);
 	}
 	write(1, s, l);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	fnc_int(t_pfs *pfs)
@@ -87,8 +83,6 @@ void	fnc_int(t_pfs *pfs)
 	}
 	if ((pfs->prec || d) && ++pfs->len)
 		ft_putnbr(d);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	ft_putinfnbr(long long int l)
@@ -113,7 +107,7 @@ void	fnc_uint(t_pfs *pfs)
 	u = va_arg(pfs->ap, typeof(u));
 	pfs->pad -= ft_max(pfs->prec, ft_unb_len(u, 10))
 		- (!(pfs->prec || u) && pfs->pad > 0 ? 1 : 0);
-	pfs->len += ft_max(pfs->pad, 0) + ft_max(pfs->prec, ft_unb_len(u, 10)) - 1;
+	pfs->len += ft_max(pfs->prec, ft_unb_len(u, 10)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
@@ -129,8 +123,6 @@ void	fnc_uint(t_pfs *pfs)
 	}
 	if ((pfs->prec || u) && ++pfs->len)
 		ft_putinfnbr(u);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	fnc_long(t_pfs *pfs)
@@ -160,8 +152,6 @@ void	fnc_long(t_pfs *pfs)
 	}
 	if ((pfs->prec || l) && ++pfs->len)
 		ft_putinfnbr(l);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	ft_putinfnbr_base(long long int l, char *base)
@@ -173,8 +163,8 @@ void	ft_putinfnbr_base(long long int l, char *base)
 	}
 	if (l >= 100000000)
 		ft_putinfnbr_base(l / 100000000, base);
-//	if (l && !(l % 100000000))
-//		ft_putstr("00000000");
+	if (l && !(l % 100000000))
+		ft_putstr("00000000");
 	else
 		ft_putnbr_base(l % 100000000, base);
 }
@@ -204,13 +194,11 @@ void	fnc_oct(t_pfs *pfs)
 	}
 	if ((pfs->prec || o || pfs->key & 0x80) && ++pfs->len)
 		ft_putnbr_base(o, "01234567");
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
 }
 
 void	fnc_hexa(t_pfs *pfs, int i)
 {
-	unsigned int			h;
+	unsigned int		h;
 	static const char	*str[4] = {HEXAU, HEXAL, "0X", "0x"};
 
 	if ((h = va_arg(pfs->ap, typeof(h))) && pfs->key & 0x80)
@@ -234,18 +222,4 @@ void	fnc_hexa(t_pfs *pfs, int i)
 	}
 	if ((pfs->prec || h) && ++pfs->len)
 		ft_putnbr_base(h, str[i]);
-	while (pfs->pad-- > 0)
-		ft_putchar(' ');
-}
-
-void	fnc_unsbas(t_pfs *pfs, int i)
-{
-	unsigned int u;
-	static const char	*str[4] = {"0123456789ABCDEF", "0123456789abcdef",
-		"0X", "0x"};
-
-	u = va_arg(pfs->ap, typeof(u));
-	if (pfs->key & 0x80)
-		write(1, str[i + 2], 2);
-	ft_putnbr_base(u, str[i]);
 }

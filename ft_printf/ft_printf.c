@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/06 05:04:17 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 05:49:48 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 07:42:04 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,19 +77,23 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
-	else if (str[i] == 'd' || str[i] == 'i')
+	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
 	{
 		if ((pfs->key & 0x05) == 4)
 			fnc_long(pfs);
 		else
 			fnc_int(pfs);
 	}
-	else if (str[i] == 'u')
+	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
 		fnc_uint(pfs);
-	else if (str[i] == 'o')
+	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
 		fnc_oct(pfs);
-	else if (str[i] == 'x' || str[i] == 'X')
+	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
 		fnc_hexa(pfs, (str[i] - 88) / 32);
+	else
+		return (i);
+	while (pfs->pad-- > 0)
+		ft_putchar(' ');
 	return (i + 1);
 }
 
@@ -101,6 +105,7 @@ int		ft_printf(char *fmt, ...)
 	int		e;
 
 	pfs.key = 0;
+	pfs.type = 0;
 	va_start(pfs.ap, fmt);
 	s = 0;
 	e = -1;

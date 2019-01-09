@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/21 02:35:07 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 04:04:17 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 06:44:35 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct	s_pfs
 {
 	va_list			ap;
 	unsigned int	key;
+	unsigned int	type;
 	int				prec;
 	int				pad;
 	int				len;
