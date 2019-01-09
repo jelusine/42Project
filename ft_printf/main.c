@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/05 23:31:20 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/06 06:07:40 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 03:47:41 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ int		main(int ac, char **av)
 	{
 		if (av[3][0] == 'n')
 		{
-			ft_printf(av[1] , ft_atoi(av[2]));NL
-			printf(av[1] , ft_atoi(av[2]));
+			ft_putnbr(ft_printf(av[1] , ft_atoi(av[2])));NL
+			ft_putnbr(printf(av[1] , ft_atoi(av[2])));
 		}
 		else
 		{
-			ft_printf(av[1] , av[2]);NL
-			printf(av[1] , av[2]);
+			ft_putnbr(ft_printf(av[1] , 4294967297));NL
+			ft_putnbr(printf(av[1] , 4294967297));
 		}
 	}
 //	if (ac == 3)

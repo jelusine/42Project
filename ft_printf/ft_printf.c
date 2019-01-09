@@ -6,13 +6,13 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/06 05:04:17 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/06 06:18:56 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 03:40:06 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./ft_printf.h"
 
-int		ft_nb_len(int nb, int base)
+int		ft_nb_len(long nb, int base)
 {
 	int i;
 
@@ -79,8 +79,15 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
-	else if ((str[i] == 'd' || str[i] == 'i'))
-		fnc_int(pfs);
+	else if (str[i] == 'd' || str[i] == 'i')
+	{
+		if ((pfs->key & 0x05) == 4)
+			fnc_long(pfs);
+		else
+			fnc_int(pfs);
+	}
+	else if (str[i] == 'u')
+		fnc_uint(pfs);
 	else if (str[i] == 'o')
 		fnc_oct(pfs);
 	else if (str[i] == 'x' || str[i] == 'X')

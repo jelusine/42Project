@@ -12,12 +12,31 @@
 
 #include "ft_printf.h"
 
+int		ft_unb_len(unsigned int nb, unsigned int base)
+{
+	int	i;
+
+	i = 1;
+	while (base <= nb && ++i)
+		nb /= base;
+	return (i);
+}
+
 void	fnc_char(t_pfs *pfs)
 {
 	char c;
 
 	c = va_arg(pfs->ap, int);
+	pfs->pad--;
+	pfs->len += ft_max(pfs->pad, 0) + 1;
+	if (!(pfs->key & 0x08) && pfs->pad > -1)
+	{
+		while (pfs->pad-- > 0)
+			ft_putchar(32 + (pfs->key & 0x40) / 4);
+	}
 	ft_putchar(c);
+	while (pfs->pad-- > 0)
+		ft_putchar(' ');
 }
 
 void	fnc_str(t_pfs *pfs)
@@ -25,7 +44,8 @@ void	fnc_str(t_pfs *pfs)
 	char 	*s;
 	int		l;
 
-	s = va_arg(pfs->ap, typeof(s));
+	if (!(s = va_arg(pfs->ap, typeof(s))) && (pfs->len += 6))
+		return (ft_putstr("(null)"));
 	if ((l = ft_strlen(s)) > pfs->prec && pfs->prec >= 0)
 		l = pfs->prec;
 	pfs->pad -= l;
@@ -33,7 +53,7 @@ void	fnc_str(t_pfs *pfs)
 	if (!(pfs->key & 0x08) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
-			ft_putchar(' ');
+			ft_putchar(32 + (pfs->key & 0x40) / 4);
 	}
 	write(1, s, l);
 	while (pfs->pad-- > 0)
@@ -44,11 +64,10 @@ void	fnc_int(t_pfs *pfs)
 {
 	int d;
 
-	d = va_arg(pfs->ap, typeof(d));
-	if ((d < 0 || pfs->key & 0x30) && ++pfs->len)
+	if (((d = va_arg(pfs->ap, typeof(d))) < 0 || pfs->key & 0x30) && ++pfs->len)
 		pfs->pad--;
-	pfs->pad -= ft_max(pfs->prec, ft_nb_len(d, 10));
-	pfs->len += ft_max(pfs->pad, 0) + ft_max(pfs->prec, ft_nb_len(d, 10)) - 1;
+	pfs->pad -= ft_max(pfs->prec, ft_nb_len(d, 10)) - (!(pfs->prec || d) && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->prec, ft_nb_len(d, 10)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
@@ -56,7 +75,7 @@ void	fnc_int(t_pfs *pfs)
 	}
 	if (pfs->key & 0x30 && d >= 0)
 		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
-	if (pfs->prec > -1 || (pfs->key & 0x40 && pfs->pad > -1))
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
 		pfs->prec -= ft_nb_len(d, 10);
 		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
@@ -66,7 +85,7 @@ void	fnc_int(t_pfs *pfs)
 		while (pfs->prec-- > 0)
 			ft_putchar('0');
 	}
-	if (pfs->prec != 0 && ++pfs->len)
+	if ((pfs->prec || d) && ++pfs->len)
 		ft_putnbr(d);
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
@@ -87,6 +106,64 @@ void	ft_putinfnbr(long long int l)
 		ft_putnbr(l % 100000000);
 }
 
+void	fnc_uint(t_pfs *pfs)
+{
+	unsigned int u;
+
+	u = va_arg(pfs->ap, typeof(u));
+	pfs->pad -= ft_max(pfs->prec, ft_unb_len(u, 10))
+		- (!(pfs->prec || u) && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->pad, 0) + ft_max(pfs->prec, ft_unb_len(u, 10)) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad > -1)
+	{
+		while (pfs->pad-- > 0)
+			ft_putchar(' ');
+	}
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
+	{
+		pfs->prec -= ft_unb_len(u, 10);
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		while (pfs->prec-- > 0)
+			ft_putchar('0');
+	}
+	if ((pfs->prec || u) && ++pfs->len)
+		ft_putinfnbr(u);
+	while (pfs->pad-- > 0)
+		ft_putchar(' ');
+}
+
+void	fnc_long(t_pfs *pfs)
+{
+	long l;
+
+	if (((l = va_arg(pfs->ap, typeof(l))) < 0 || pfs->key & 0x30) && ++pfs->len)
+		pfs->pad--;
+	pfs->pad -= ft_max(pfs->prec, ft_nb_len(l, 10)) - (!(pfs->prec || l) && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->pad, 0) + ft_max(pfs->prec, ft_nb_len(l, 10)) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad > -1)
+	{
+		while (pfs->pad-- > 0)
+			ft_putchar(' ');
+	}
+	if (pfs->key & 0x30 && l >= 0)
+		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
+	{
+		pfs->prec -= ft_nb_len(l, 10);
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		if (l < 0 && (l *= -1))
+			ft_putchar('-');
+		while (pfs->prec-- > 0)
+			ft_putchar('0');
+	}
+	if ((pfs->prec || l) && ++pfs->len)
+		ft_putinfnbr(l);
+	while (pfs->pad-- > 0)
+		ft_putchar(' ');
+}
+
 void	ft_putinfnbr_base(long long int l, char *base)
 {
 	if (l < 0)
@@ -102,76 +179,61 @@ void	ft_putinfnbr_base(long long int l, char *base)
 		ft_putnbr_base(l % 100000000, base);
 }
 
-void	fnc_long(t_pfs *pfs)
-{
-	long	d;
-	int 	n;
-
-	d = va_arg(pfs->ap, long);
-	if ((pfs->key & 0x20) && d > 0)
-		ft_putchar('+');
-	if (pfs->prec)
-	{
-		n = pfs->prec - ft_nb_len(d, 10);
-		while (n-- > 0)
-			ft_putchar('0');
-	}
-	ft_putinfnbr(d);
-}
-
 void	fnc_oct(t_pfs *pfs)
 {
-	int o;
-	int n;
+	unsigned int o;
 
-	o = va_arg(pfs->ap, int);
-	if (pfs->key & 0x80)
-		ft_putchar('0');
-	if (pfs->prec)
+	if ((o = va_arg(pfs->ap, typeof(o))) && pfs->key & 0x80)
+		pfs->pad--;
+	pfs->pad -= ft_max(pfs->prec, ft_unb_len(o, 8)) - (!(pfs->prec || o) && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->prec, ft_unb_len(o, 8)) + ft_max(pfs->pad, 0) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad)
 	{
-		n = pfs->prec - ft_nb_len(o, 8);
-		while (n-- > 0)
+		while (pfs->pad-- > 0)
+			ft_putchar(' ');
+	}
+	if (o && pfs->key & 0x80 && (++pfs->len))
+		ft_putchar('0');
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
+	{
+		pfs->prec -= ft_unb_len(o, 8);
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		while (pfs->prec-- > 0)
 			ft_putchar('0');
 	}
-	ft_putnbr_base(o, "01234567");
-}
-
-void	fnc_lhexa(t_pfs *pfs)
-{
-	int h;
-
-	h = va_arg(pfs->ap, long);
-	if (pfs->key & 0x80)
-		ft_putchar('0');
-	ft_putinfnbr_base(h, "0123456789abcdef");
+	if ((pfs->prec || o || pfs->key & 0x80) && ++pfs->len)
+		ft_putnbr_base(o, "01234567");
+	while (pfs->pad-- > 0)
+		ft_putchar(' ');
 }
 
 void	fnc_hexa(t_pfs *pfs, int i)
 {
 	unsigned int			h;
-	static const char	*str[4] = {"0123456789ABCDEF", "0123456789abcdef",
-		"0X", "0x"};
+	static const char	*str[4] = {HEXAU, HEXAL, "0X", "0x"};
 
 	if ((h = va_arg(pfs->ap, typeof(h))) && pfs->key & 0x80)
 		pfs->pad -= 2;
-	pfs->pad -= ft_max(pfs->prec, ft_nb_len(h, 16));
-	pfs->len += ft_max(pfs->prec, ft_nb_len(h, 16)) + ft_max(pfs->pad, 0);
-	if (!(pfs->key & 0x40) && pfs->pad && !(pfs->key & 0x08))
+	pfs->pad -= ft_max(pfs->prec, ft_unb_len(h, 16)) - (!(pfs->prec || h) && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->prec, ft_unb_len(h, 16)) + ft_max(pfs->pad, 0) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad)
 	{
 		while (pfs->pad-- > 0)
 			ft_putchar(' ');
 	}
 	if (h && pfs->key & 0x80 && (pfs->len += 2))
 		write(1, str[i + 2], 2);
-	if (pfs->prec > -1 || (pfs->key & 0x40 && pfs->pad > -1))
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
-		pfs->prec -= ft_nb_len(h, 16);
+		pfs->prec -= ft_unb_len(h, 16);
 		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
 			pfs->pad = -1;
 		while (pfs->prec-- > 0)
 			ft_putchar('0');
 	}
-	ft_putnbr_base(h, str[i]);
+	if ((pfs->prec || h) && ++pfs->len)
+		ft_putnbr_base(h, str[i]);
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
 }
