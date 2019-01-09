@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/06 05:04:17 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 03:40:06 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/09 05:49:48 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	i = 1;
 	while (str[i] && ft_charcmpstr(str[i], "cspdiouuxXf") < 0)
 		i++;
-//	ft_putnbr(i); TEST1
 	n = 0;
 	while (++n < i)
 	{
@@ -73,7 +72,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			pfs->prec = ft_atoi(&str[n + 1]);
 			pfs->key = pfs->key & 0xbf;
 		}
-//		ft_putnbr(pfs->key); TEST5
 	}
 	if (str[i] == 'c')
 		fnc_char(pfs);
@@ -92,56 +90,10 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_oct(pfs);
 	else if (str[i] == 'x' || str[i] == 'X')
 		fnc_hexa(pfs, (str[i] - 88) / 32);
-/*	ft_putnbr(nk);NL
-	ft_putnbr(i);NL
-	ft_putnbr(pfs->key);NL*/
 	return (i + 1);
 }
-/*{
-	int	i;
-	int	n;
-	int j;
-	//»·static t_fnctpf»  tabfn[7] = {{fnc_char}, {fnc_int}, {fnc_str}, {fnc_oct}, {    fnc_hexa}, {fnc_int}, {fnc_long}};
 
-	i = 0;
-	n = 0;
-	while (str[++i])
-	{
-		if (str[i] == '#' && ++n && i++)
-			pfs->key = pfs->key | 0x0001;
-		//»·  else if ((j = ft_charcmpstr(str[i], "cdsoxil")) > -1 && ++n)
-		//»·    tabfn[j].f(*pfs);
-		if (str[i] == 'c' && ++n)
-			fnc_char(*pfs);
-		else if (str[i] == 's' && ++n)
-			fnc_str(*pfs);
-		else if (((str[i] == 'd' || str[i] == 'i') && ++n)
-				|| (str[i] == 'h' && (str[i + 1] == 'd' || str[i + 1] == 'i')
-					&& (n += 2) && ++i))
-			fnc_int(*pfs);
-		else if ((str[i] == 'x' && ++n)
-				|| (str[i] == 'h' && (str[i + 1] == 'x') && (n += 2) && ++i))
-			fnc_unsbas(*pfs, 1);
-		else if ((str[i] == 'X' && ++n)
-				|| (str[i] == 'h' && (str[i + 1] == 'X') && (n += 2) && ++i))
-			fnc_unsbas(*pfs, 0);
-		else if (str[i] == 'o' && ++n)
-			fnc_oct(*pfs);
-		else if ((str[i] == 'x' || str[i] == 'X') && ++n)
-			fnc_hexa(*pfs, (str[i] - 88) / 32);
-		else if (str[i] == 'l' && (str[i + 1] == 'd' || str[i + 1] == 'i') && (n += 2) && ++i)
-			fnc_long(*pfs);
-		else if (str[i] == 'l' && str[i + 1] == 'x' && (n += 2) && ++i)
-			fnc_lhexa(*pfs);
-		else
-			break;
-	}
-	if (n)
-		n++;
-	return (n);
-}*/
-
-int		 ft_printf(char *fmt, ...)
+int		ft_printf(char *fmt, ...)
 {
 	t_pfs	pfs;
 	va_list	ap;
