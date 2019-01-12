@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/06 02:10:00 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 06:00:26 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/12 09:40:14 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,17 @@ void	fnc_char(t_pfs *pfs)
 	char c;
 
 	c = va_arg(pfs->ap, int);
-	pfs->pad--;
-	pfs->len += ft_max(pfs->pad, 0) + 1;
+	pfs->str = ft_strdup("0");
+	pfs->str[0] = c;
+	pfs->strlen = 1;
+	pfs->prec = -1;
+	/*pfs->len += ft_max(pfs->pad, 0) + 1;
 	if (!(pfs->key & 0x08) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
 			ft_putchar(32 + (pfs->key & 0x40) / 4);
 	}
-	ft_putchar(c);
+	ft_putchar(c);*/
 }
 
 void	fnc_str(t_pfs *pfs)
@@ -60,9 +63,13 @@ void	fnc_int(t_pfs *pfs)
 {
 	int d;
 
-	if (((d = va_arg(pfs->ap, typeof(d))) < 0 || pfs->key & 0x30) && ++pfs->len)
+	d = va_arg(pfs->ap, typeof(d));
+//	free(pfs->str);
+	pfs->str = ft_itoa_base(d, 10);
+	pfs->strlen = ft_strlen(pfs->str);
+	if ((d < 0 || pfs->key & 0x30) && ++pfs->len)
 		pfs->pad--;
-	pfs->pad -= ft_max(pfs->prec, ft_nb_len(d, 10)) - (!(pfs->prec || d) && pfs->pad > 0 ? 1 : 0);
+/*	pfs->pad -= ft_max(pfs->prec, ft_nb_len(d, 10)) - (!(pfs->prec || d) && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, ft_nb_len(d, 10)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
@@ -82,7 +89,7 @@ void	fnc_int(t_pfs *pfs)
 			ft_putchar('0');
 	}
 	if ((pfs->prec || d) && ++pfs->len)
-		ft_putnbr(d);
+		ft_putnbr(d);*/
 }
 
 void	ft_putinfnbr(long long int l)
@@ -105,8 +112,9 @@ void	fnc_uint(t_pfs *pfs)
 	unsigned int u;
 
 	u = va_arg(pfs->ap, typeof(u));
-	pfs->pad -= ft_max(pfs->prec, ft_unb_len(u, 10))
-		- (!(pfs->prec || u) && pfs->pad > 0 ? 1 : 0);
+	pfs->str = ft_itoa_base(u, 1);
+	pfs->strlen = ft_strlen(pfs->str);
+/*	pfs->pad -= ft_max(pfs->prec, ft_unb_len(u, 10)) - (!(pfs->prec || u) && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, ft_unb_len(u, 10)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
@@ -122,7 +130,7 @@ void	fnc_uint(t_pfs *pfs)
 			ft_putchar('0');
 	}
 	if ((pfs->prec || u) && ++pfs->len)
-		ft_putinfnbr(u);
+		ft_putinfnbr((unsigned)u);*/
 }
 
 void	fnc_long(t_pfs *pfs)
@@ -175,7 +183,9 @@ void	fnc_oct(t_pfs *pfs)
 
 	if ((o = va_arg(pfs->ap, typeof(o))) && pfs->key & 0x80)
 		pfs->pad--;
-	pfs->pad -= ft_max(pfs->prec, ft_unb_len(o, 8)) - (!(pfs->prec || o) && pfs->pad > 0 ? 1 : 0);
+	pfs->str = ft_itoa_base(o, 8);
+	pfs->strlen = ft_strlen(pfs->str);
+/*	pfs->pad -= ft_max(pfs->prec, ft_unb_len(o, 8)) - (!(pfs->prec || o) && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, ft_unb_len(o, 8)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad)
 	{
@@ -193,17 +203,19 @@ void	fnc_oct(t_pfs *pfs)
 			ft_putchar('0');
 	}
 	if ((pfs->prec || o || pfs->key & 0x80) && ++pfs->len)
-		ft_putnbr_base(o, "01234567");
+		ft_putnbr_base(o, "01234567");*/
 }
 
-void	fnc_hexa(t_pfs *pfs, int i)
+void	fnc_hexa(t_pfs *pfs)
 {
 	unsigned int		h;
-	static const char	*str[4] = {HEXAU, HEXAL, "0X", "0x"};
+//	static const char	*str[4] = {HEXAU, HEXAL, "0X", "0x"};
 
 	if ((h = va_arg(pfs->ap, typeof(h))) && pfs->key & 0x80)
 		pfs->pad -= 2;
-	pfs->pad -= ft_max(pfs->prec, ft_unb_len(h, 16)) - (!(pfs->prec || h) && pfs->pad > 0 ? 1 : 0);
+	pfs->str = ft_itoa_base((unsigned int)h, 16);
+	pfs->strlen = ft_strlen(pfs->str);
+	/*pfs->pad -= ft_max(pfs->prec, ft_unb_len(h, 16)) - (!(pfs->prec || h) && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, ft_unb_len(h, 16)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad)
 	{
@@ -221,5 +233,5 @@ void	fnc_hexa(t_pfs *pfs, int i)
 			ft_putchar('0');
 	}
 	if ((pfs->prec || h) && ++pfs->len)
-		ft_putnbr_base(h, str[i]);
+		ft_putnbr_base(h, str[i]);*/
 }

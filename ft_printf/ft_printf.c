@@ -6,7 +6,7 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/12/06 05:04:17 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/09 07:42:04 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/01/12 09:45:48 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			pfs->key = pfs->key & 0xbf;
 		}
 	}
-	if (str[i] == 'c')
+/*	if (str[i] == 'c')
 		fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
@@ -89,9 +89,46 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
 		fnc_oct(pfs);
 	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
-		fnc_hexa(pfs, (str[i] - 88) / 32);
-	else
-		return (i);
+		fnc_hexa(pfs, (str[i] - 88) / 32);*/
+	if (str[i] == 'c')
+			fnc_char(pfs);
+	else if (str[i] == 's')
+		fnc_str(pfs);
+	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
+		fnc_int(pfs);
+	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
+		fnc_uint(pfs);
+	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
+		fnc_oct(pfs);
+	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
+		fnc_hexa(pfs);
+	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' ? 1 : 0)) + ft_max(pfs->pad, 0) - 1;
+	if (!(pfs->key & 0x48) && pfs->pad > -1)
+	{
+		while (pfs->pad-- > 0)
+			ft_putchar(' ');
+	}
+	if (pfs->type & 0x01 && pfs->key & 0x30 && pfs->str[0] != '-')
+		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
+	if (pfs->type & 0x0c && pfs->str[0] != '0' && pfs->key & 0x80 && (pfs->len += (pfs->type & 0x0c) / 4))
+		write(1, (str[i] == 'x' ? "0x" : "0X"), (pfs->type & 0x0c) / 4);
+	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
+	{
+		if (pfs->str[0] == '-' && ++pfs->str && pfs->strlen--)
+			ft_putchar('-');
+		pfs->prec -= pfs->strlen;
+		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+			pfs->pad = -1;
+		while (pfs->prec-- > 0)
+			ft_putchar('0');
+	}
+	n = -1;
+	while (str[i] == 'x' && pfs->str[++n])
+		pfs->str[n] = ft_tolower(pfs->str[n]);
+	if ((pfs->prec || pfs->str[0] != '0' || (pfs->key & 0x80 && pfs->type & 0x04)) && ++pfs->len)
+		write(1, pfs->str, pfs->strlen);
+//	free(pfs->str);
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
 	return (i + 1);
@@ -112,6 +149,7 @@ int		ft_printf(char *fmt, ...)
 	pfs.prec = -1;
 	pfs.pad = -1;
 	pfs.len = 0;
+	pfs.strlen = 0;
 	while (fmt[++e])
 	{
 		if (fmt[e] == '%')
@@ -120,6 +158,7 @@ int		ft_printf(char *fmt, ...)
 			if (fmt[e + 1] != '%')
 			{
 				pfs.len += e - s;
+				pfs.str = ft_strdup("");
 				s = e + ft_parsing(&fmt[e], &pfs);
 				e += s - e - 1;
 			}
