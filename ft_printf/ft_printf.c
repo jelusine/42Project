@@ -28,7 +28,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	int n;
 
 	i = 1;
-	while (str[i] && ft_charcmpstr(str[i], "cspdiouuxXf") < 0)
+	while (str[i] && ft_charcmpstr(str[i], "cspdiouxXf") < 0)
 		i++;
 	n = 0;
 	while (++n < i)
@@ -77,10 +77,10 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
-	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
-		fnc_int(pfs);
 	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
 		fnc_uint(pfs);
+	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
+		fnc_int(pfs);
 	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
 		fnc_oct(pfs);
 	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))

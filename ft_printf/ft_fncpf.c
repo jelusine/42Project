@@ -49,16 +49,18 @@ void	fnc_str(t_pfs *pfs)
 
 void	fnc_int(t_pfs *pfs)
 {
-	long int d;
+	int d;
 
 	d = va_arg(pfs->ap, typeof(d));
 //	free(pfs->str);
-	if (pfs->key & 0x02)
+	if ((pfs->key & 0x03) == 3)
+		pfs->str = ft_itoa_base((char)d, 10);
+	else if (pfs->key & 0x02)
 		pfs->str = ft_itoa_base((short int)d, 10);
 	else if (pfs->key & 0x04)
-		pfs->str = ft_itoa_base(d, 10);
+		pfs->str = ft_itoa_base((long)d, 10);
 	else
-		pfs->str = ft_itoa_base((int)d, 10);
+		pfs->str = ft_itoa_base(d, 10);
 	pfs->strlen = ft_strlen(pfs->str);
 	if ((pfs->str[0] == '-' || pfs->key & 0x30) && ++pfs->len)
 		pfs->pad--;
