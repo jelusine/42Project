@@ -6,7 +6,7 @@
 #    By: jelusine <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/04/03 18:18:46 by jelusine          #+#    #+#              #
-#    Updated: 2018/12/12 22:25:39 by jelusine         ###   ########.fr        #
+#    Updated: 2019/01/23 00:47:11 by jelusine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,6 @@ SRCC =	ft_abs.c\
 		ft_atoi_base.c\
 		ft_bzero.c\
 		ft_charcmpstr.c\
-		ft_charcolor.c\
 		ft_color.c\
 		ft_errormsg.c\
 		ft_isalnum.c\
@@ -26,15 +25,6 @@ SRCC =	ft_abs.c\
 		ft_isprint.c\
 		ft_itoa.c\
 		ft_itoa_base.c\
-		ft_lstadd.c\
-		ft_lstaddend.c\
-		ft_lstdel.c\
-		ft_lstdelone.c\
-		ft_lstiter.c\
-		ft_lstmap.c\
-		ft_lstnew.c\
-		ft_lst_remove_if.c\
-		ft_lst_remove_if_size.c\
 		ft_max.c\
 		ft_memalloc.c\
 		ft_memccpy.c\
@@ -46,15 +36,10 @@ SRCC =	ft_abs.c\
 		ft_memset.c\
 		ft_min.c\
 		ft_putchar.c\
-		ft_putchar_fd.c\
 		ft_putendl.c\
-		ft_putendl_fd.c\
 		ft_putnbr.c\
 		ft_putnbr_base.c\
-		ft_putnbr_fd.c\
 		ft_putstr.c\
-		ft_putstr_fd.c\
-		ft_split.c\
 		ft_strcat.c\
 		ft_strchr.c\
 		ft_strclr.c\
@@ -77,14 +62,12 @@ SRCC =	ft_abs.c\
 		ft_strnew.c\
 		ft_strnstr.c\
 		ft_strrchr.c\
-		ft_strsplit.c\
 		ft_strstr.c\
 		ft_strsub.c\
 		ft_strtrim.c\
 		ft_swap.c\
 		ft_tolower.c\
 		ft_toupper.c\
-		get_next_line.c
 
 LAG = -Wall -Werror -Wextra
 

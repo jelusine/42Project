@@ -73,23 +73,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			pfs->key = pfs->key & 0xbf;
 		}
 	}
-/*	if (str[i] == 'c')
-		fnc_char(pfs);
-	else if (str[i] == 's')
-		fnc_str(pfs);
-	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
-	{
-		if ((pfs->key & 0x05) == 4)
-			fnc_long(pfs);
-		else
-			fnc_int(pfs);
-	}
-	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
-		fnc_uint(pfs);
-	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
-		fnc_oct(pfs);
-	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
-		fnc_hexa(pfs, (str[i] - 88) / 32);*/
 	if (str[i] == 'c')
 			fnc_char(pfs);
 	else if (str[i] == 's')
@@ -102,8 +85,8 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_oct(pfs);
 	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
 		fnc_hexa(pfs);
-	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
-	pfs->len += ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' ? 1 : 0)) + ft_max(pfs->pad, 0) - 1;
+	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
+	pfs->len += ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
 	{
 		while (pfs->pad-- > 0)
