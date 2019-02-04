@@ -12,6 +12,32 @@
 
 #include "ft_printf.h"
 
+char	*ft_utoa_base(unsigned long nb, unsigned int tbse)
+{
+	char		*str;
+	unsigned long		i;
+	int			n;
+	const char	*base = "0123456789ABCDEF";
+
+	if (tbse < 2 || 16 < tbse)
+		return (0);
+	n = 1;
+	i = nb;
+	while (i >= tbse && ++n)
+		i /= tbse;
+	if (!(str = (char *)malloc(sizeof(char) * (n + 1))))
+		return (NULL);
+	str[n--] = '\0';
+	str[0] = '0';
+	i = nb;
+	while (i >= 1)
+	{
+		str[n--] = base[i % tbse];
+		i /= tbse;
+	}
+	return (str);
+}
+
 int		ft_unb_len(unsigned int nb, unsigned int base)
 {
 	int	i;
@@ -49,7 +75,7 @@ void	fnc_str(t_pfs *pfs)
 
 void	fnc_int(t_pfs *pfs)
 {
-	int d;
+	long int d;
 
 	d = va_arg(pfs->ap, typeof(d));
 //	free(pfs->str);
@@ -58,9 +84,9 @@ void	fnc_int(t_pfs *pfs)
 	else if (pfs->key & 0x02)
 		pfs->str = ft_itoa_base((short int)d, 10);
 	else if (pfs->key & 0x04)
-		pfs->str = ft_itoa_base((long)d, 10);
-	else
 		pfs->str = ft_itoa_base(d, 10);
+	else
+		pfs->str = ft_itoa_base((int)d, 10);
 	pfs->strlen = ft_strlen(pfs->str);
 	if ((pfs->str[0] == '-' || pfs->key & 0x30) && ++pfs->len)
 		pfs->pad--;
@@ -83,11 +109,20 @@ void	ft_putinfnbr(long long int l)
 
 void	fnc_uint(t_pfs *pfs)
 {
-	unsigned int u;
+	unsigned long int u;
 
 	u = va_arg(pfs->ap, typeof(u));
-	pfs->str = ft_itoa_base(u, 1);
+	if ((pfs->key & 0x03) == 3)
+		pfs->str = ft_utoa_base((unsigned char)u, 10);
+	else if (pfs->key & 0x02)
+		pfs->str = ft_utoa_base((unsigned short int)u, 10);
+	else if (pfs->key & 0x04)
+		pfs->str = ft_utoa_base(u, 10);
+	else
+		pfs->str = ft_utoa_base((unsigned int)u, 10);
 	pfs->strlen = ft_strlen(pfs->str);
+	//ft_putstr(pfs->str);
+	//ft_putnbr((pfs->strlen = ft_strlen(pfs->str))); //TEST2
 }
 
 void	fnc_long(t_pfs *pfs)
@@ -136,20 +171,56 @@ void	ft_putinfnbr_base(long long int l, char *base)
 
 void	fnc_oct(t_pfs *pfs)
 {
-	unsigned int o;
+	unsigned long o;
 
 	if ((o = va_arg(pfs->ap, typeof(o))) && pfs->key & 0x80)
 		pfs->pad--;
-	pfs->str = ft_itoa_base(o, 8);
+	if ((pfs->key & 0x03) == 3)
+		pfs->str = ft_itoa_base((unsigned char)o, 8);
+	else if (pfs->key & 0x02)
+			pfs->str = ft_itoa_base((unsigned short int)o, 8);
+	else if (pfs->key & 0x04)
+		pfs->str = ft_itoa_base(o, 8);
+	else
+		pfs->str = ft_itoa_base((unsigned int)o, 8);
 	pfs->strlen = ft_strlen(pfs->str);
 }
 
 void	fnc_hexa(t_pfs *pfs)
 {
-	int		h;
+	unsigned	long	h;
 
 	if ((h = va_arg(pfs->ap, typeof(h))) && pfs->key & 0x80)
 		pfs->pad -= 2;
-	pfs->str = ft_itoa_base((unsigned int)h, 16);
+	if ((pfs->key & 0x03) == 3)
+		pfs->str = ft_itoa_base((unsigned char)h, 16);
+	else if (pfs->key & 0x02)
+			pfs->str = ft_itoa_base((unsigned short int)h, 16);
+	else if (pfs->key & 0x04)
+		pfs->str = ft_itoa_base(h, 16);
+	else
+		pfs->str = ft_itoa_base((unsigned int)h, 16);
 	pfs->strlen = ft_strlen(pfs->str);
+}
+
+void fnc_float(t_pfs *pfs)
+{
+	double 	f;
+	char		*str;
+	int			k;
+
+	f = va_arg(pfs->ap, typeof(f));
+	str = ft_itoa_base(f, 10);
+	k = ft_strlen(str);
+	if (pfs->prec)
+		pfs->prec++;
+	if (!(pfs->str = (char *)malloc(sizeof(char) * (k + pfs->prec + 1))))
+		return ;
+	ft_strcpy(pfs->prec, str)
+	/*str = ft_strjoin(ft_itoa_base(f, 10), ".");
+	if (f < 0)
+		f *= -1;
+	pfs->str = ft_strjoin(str, ft_itoa_base(((int)(f * 1000000) % 1000000), 10));
+	free(str);
+	pfs->strlen = (pfs->prec >= 0 ? ft_min(k + pfs->prec, ft_strlen(pfs->str)) : ft_strlen(pfs->str));*/
 }

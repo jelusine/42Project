@@ -17,8 +17,27 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <math.h>
 # define HEXAL "0123456789abcdef"
 # define HEXAU "0123456789ABCDEF"
+
+typedef struct	s_dbl
+{
+	unsigned int 	manta	: 16;
+	unsigned int 	mantb	: 16;
+	unsigned int 	mantc	: 16;
+	unsigned int 	mantd	: 4;
+	unsigned int 	exp		: 11;
+	unsigned int 	sign	: 1;
+}								t_dbl;
+
+typedef struct	s_flt
+{
+	unsigned int 	manta	: 16;
+	unsigned int 	mantb	: 7;
+	unsigned int 	exp		: 8;
+	unsigned int 	sign	: 1;
+}								t_flt;
 
 typedef struct	s_pfs
 {
@@ -30,7 +49,7 @@ typedef struct	s_pfs
 	int				len;
 	char			*str;
 	int				strlen;
-}				t_pfs;
+}								t_pfs;
 
 void			fnc_char(t_pfs *pfs);
 void			fnc_int(t_pfs *pfs);
@@ -41,6 +60,7 @@ void			fnc_long(t_pfs *pfs);
 void			fnc_str(t_pfs *pfs);
 void			fnc_oct(t_pfs *pfs);
 void			fnc_hexa(t_pfs *pfs);
+void 			fnc_float(t_pfs *pfs);
 void			fnc_unsbas(t_pfs *pfs, int i);
 int				ft_nb_len(long nb, int base);
 int				ft_printf(char *fmt, ...);

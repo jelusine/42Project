@@ -28,7 +28,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	int n;
 
 	i = 1;
-	while (str[i] && ft_charcmpstr(str[i], "cspdiouxXf") < 0)
+	while (str[i] && ft_charcmpstr(str[i], "cspdiouxXfF") < 0)
 		i++;
 	n = 0;
 	while (++n < i)
@@ -85,6 +85,8 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_oct(pfs);
 	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
 		fnc_hexa(pfs);
+	else if (str[i] == 'f' && (pfs->type = pfs->type | 0x01))
+		fnc_float(pfs);
 	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) + ft_max(pfs->pad, 0) - 1;
 	if (!(pfs->key & 0x48) && pfs->pad > -1)
