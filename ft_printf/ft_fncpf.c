@@ -63,11 +63,13 @@ void	fnc_str(t_pfs *pfs)
 {
 	char *s;
 
+	pfs->str = ft_strdup("");
 	if (!(s = va_arg(pfs->ap, char*)) && (pfs->len += 6))
 		return (ft_putstr("(null)"));
 	if ((pfs->strlen = ft_strlen(s)) > pfs->prec && pfs->prec >= 0)
 		pfs->strlen = pfs->prec;
 	pfs->prec = -1;
+	ft_strdel(&pfs->str);
 	pfs->str = ft_strdup(s);
 //	pfs->pad -= pfs->strlen;
 //	pfs->len += pfs->strlen + ft_max(pfs->pad,  0);
@@ -221,6 +223,7 @@ void fnc_float(t_pfs *pfs)
 	if (!(pfs->str = (char *)malloc(sizeof(char) * (k + pfs->prec + 1))))
 		return ;
 	ft_strcpy(pfs->str, str);
+	ft_strdel(&str);
 	pfs->str[k] = '.';
 	if (f < 0)
 		f *= -1;

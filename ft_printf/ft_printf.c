@@ -26,6 +26,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 {
 	int i;
 	int n;
+	int t;
 
 	i = 1;
 	while (str[i] && ft_charcmpstr(str[i], "cspdiouxXfF") < 0)
@@ -39,7 +40,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		{
 			if (str[n] == '0' && !(pfs->key & 0x08))
 				pfs->key = pfs->key | 0x40;
-			pfs->pad = ft_atoi(&str[n]);
+			pfs->pad = ft_max(ft_atoi(&str[n]), pfs->pad);
 			n += ft_nb_len(pfs->pad, 10) - 1;
 		}
 		else if (str[n] == '+')
@@ -68,8 +69,24 @@ int		ft_parsing(char *str, t_pfs *pfs)
 				pfs->key = pfs->key | 0x01;
 		}
 		else if (str[n] == '.')
+		{
 			pfs->prec = ft_atoi(&str[n + 1]);
+			n += ft_nb_len(pfs->prec, 10) - 1;
+		}
+		if (ft_charcmpstr(str[n], "#+- .0123456789lh") < 0)
+		{
+			break ;
+		}
 	}
+	if (!str[i] || n < i)
+	{
+		pfs->str = ft_strdup("0");
+		pfs->str[0] = str[n];
+		pfs->strlen = (str[n] ? 1 : 0);
+		pfs->prec = -1;
+		i = n;
+	}
+	t = 0;
 	if (str[i] == 'c')
 		fnc_char(pfs);
 	else if (str[i] == 's')
@@ -97,7 +114,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		write(1, (str[i] == 'x' ? "0x" : "0X"), (pfs->type & 0x0c) / 4);
 	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
-		if (pfs->str[0] == '-' && ++pfs->str && pfs->strlen--)
+		if (pfs->str[0] == '-' && ++t && pfs->strlen--)
 			ft_putchar('-');
 		pfs->prec -= pfs->strlen;
 		if (pfs->prec < 0 && pfs->key & 0x40 && (pfs->prec = pfs->pad))
@@ -109,10 +126,13 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	while (str[i] == 'x' && pfs->str[++n])
 		pfs->str[n] = ft_tolower(pfs->str[n]);
 	if ((pfs->prec || pfs->str[0] != '0' || (pfs->key & 0x80 && pfs->type & 0x04)) && ++pfs->len)
-		write(1, pfs->str, pfs->strlen);
+	{
+		write(1, &pfs->str[t], pfs->strlen);
+		ft_strdel(&pfs->str);
+	}
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
-	return (i + 1);
+	return ((str[i] ? i + 1 : 0));
 }
 
 int		ft_printf(char *fmt, ...)
@@ -139,7 +159,6 @@ int		ft_printf(char *fmt, ...)
 			if (fmt[e + 1] != '%')
 			{
 				pfs.len += e - s;
-				pfs.str = ft_strdup("");
 				s = e + ft_parsing(&fmt[e], &pfs);
 				e += s - e - 1;
 			}
