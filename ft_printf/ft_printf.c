@@ -37,7 +37,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			pfs->key = pfs->key | 0x80;
 		else if (ft_isdigit(str[n]) && str[n - 1] != '.' && !ft_isdigit(str[n - 1]))
 		{
-			if (str[n] == '0' && pfs->prec < 0 && !(pfs->key & 0x08))
+			if (str[n] == '0' && !(pfs->key & 0x08))
 				pfs->key = pfs->key | 0x40;
 			pfs->pad = ft_atoi(&str[n]);
 			n += ft_nb_len(pfs->pad, 10) - 1;
@@ -68,13 +68,10 @@ int		ft_parsing(char *str, t_pfs *pfs)
 				pfs->key = pfs->key | 0x01;
 		}
 		else if (str[n] == '.')
-		{
 			pfs->prec = ft_atoi(&str[n + 1]);
-			pfs->key = pfs->key & 0xbf;
-		}
 	}
 	if (str[i] == 'c')
-			fnc_char(pfs);
+		fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
 	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
@@ -89,7 +86,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_float(pfs);
 	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
 	pfs->len += ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) + ft_max(pfs->pad, 0) - 1;
-	if (!(pfs->key & 0x48) && pfs->pad > -1)
+	if (pfs->pad > -1 && !(pfs->key & 0x08) && (!(pfs->key & 0x40) || (pfs->prec >= 0 && pfs->key & 0x40 && pfs->type & 0x0f)))
 	{
 		while (pfs->pad-- > 0)
 			ft_putchar(' ');
@@ -103,7 +100,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		if (pfs->str[0] == '-' && ++pfs->str && pfs->strlen--)
 			ft_putchar('-');
 		pfs->prec -= pfs->strlen;
-		if (pfs->key & 0x40 && (pfs->prec = pfs->pad))
+		if (pfs->prec < 0 && pfs->key & 0x40 && (pfs->prec = pfs->pad))
 			pfs->pad = -1;
 		while (pfs->prec-- > 0)
 			ft_putchar('0');
@@ -113,7 +110,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		pfs->str[n] = ft_tolower(pfs->str[n]);
 	if ((pfs->prec || pfs->str[0] != '0' || (pfs->key & 0x80 && pfs->type & 0x04)) && ++pfs->len)
 		write(1, pfs->str, pfs->strlen);
-//	free(pfs->str);
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
 	return (i + 1);

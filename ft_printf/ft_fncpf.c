@@ -208,19 +208,28 @@ void fnc_float(t_pfs *pfs)
 	double 	f;
 	char		*str;
 	int			k;
+	int 		p;
+	unsigned int			x;
 
 	f = va_arg(pfs->ap, typeof(f));
 	str = ft_itoa_base(f, 10);
 	k = ft_strlen(str);
+ 	if (pfs->prec < 0)
+		pfs->prec = 6;
 	if (pfs->prec)
 		pfs->prec++;
 	if (!(pfs->str = (char *)malloc(sizeof(char) * (k + pfs->prec + 1))))
 		return ;
-	ft_strcpy(pfs->prec, str)
-	/*str = ft_strjoin(ft_itoa_base(f, 10), ".");
+	ft_strcpy(pfs->str, str);
+	pfs->str[k] = '.';
 	if (f < 0)
 		f *= -1;
-	pfs->str = ft_strjoin(str, ft_itoa_base(((int)(f * 1000000) % 1000000), 10));
-	free(str);
-	pfs->strlen = (pfs->prec >= 0 ? ft_min(k + pfs->prec, ft_strlen(pfs->str)) : ft_strlen(pfs->str));*/
+	p = 1;
+	x = 1;
+	while (--pfs->prec > 0 && (x *= 10))
+		pfs->str[k + p++] = 48 + ft_abs((int)(f * x)) % 10;
+	pfs->str[k + (p == 1 ? 0 : p)] = 0;
+	pfs->strlen = ft_strlen(pfs->str);
+	if ((pfs->str[0] == '-' || pfs->key & 0x30) && ++pfs->len)
+		pfs->pad--;
 }

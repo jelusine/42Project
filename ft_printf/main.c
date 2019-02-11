@@ -29,9 +29,9 @@ int		main(int ac, char **av)
 	{
 		if (av[3][0] == 'n')
 		{
-			ft_putnbr(ft_printf(av[1] , /*atol(av[2])*/2.35));
+			ft_putnbr(ft_printf(av[1] , atol(av[2])/*-2.0123456789*/));
 			NL;
-			ft_putnbr(printf(av[1] , /*atol(av[2])*/2.35));
+			ft_putnbr(printf(av[1] , atol(av[2])/*-2.0123456789*/));
 		}
 		else
 		{
