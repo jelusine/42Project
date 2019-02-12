@@ -20,6 +20,7 @@
 # include <math.h>
 # define HEXAL "0123456789abcdef"
 # define HEXAU "0123456789ABCDEF"
+# define SETCOL "red\0green\0yellow\0blue\0purple\0cyan\0white\0eoc"
 
 typedef struct	s_dbl
 {
@@ -62,6 +63,7 @@ void			fnc_oct(t_pfs *pfs);
 void			fnc_hexa(t_pfs *pfs);
 void 			fnc_float(t_pfs *pfs);
 void			fnc_unsbas(t_pfs *pfs, int i);
+int 		  ft_pfcolor(const char *str, int *pflen);
 int				ft_nb_len(long nb, int base);
 int				ft_printf(char *fmt, ...);
 

@@ -11,7 +11,8 @@
 # **************************************************************************** #
 
 SRCC =	ft_printf.c\
-		ft_fncpf.c
+		ft_fncpf.c\
+		ft_pfcolor.c
 
 LAG = -Wall -Werror -Wextra
 

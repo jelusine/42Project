@@ -15,9 +15,13 @@
 //int main(void)
 int		main(int ac, char **av)
 {
+	int x;
+
+//	ft_color(SETCOL, "c");
 //	const char ok[4] = "test";
 	//»·long long l;
-
+	if (ac == 2)
+		ft_pfcolor(av[1], NULL);
 	//»·if (ac == 4)
 	//»·  ft_printf(av[1] , av[2], ft_atoi(av[3]));
 	//»·if (ac == 3)
@@ -31,12 +35,14 @@ int		main(int ac, char **av)
 		{
 			ft_putnbr(ft_printf(av[1] , atol(av[2])/*-2.0123456789*/));
 			NL;
-			ft_putnbr(printf(av[1] , atol(av[2])/*-2.0123456789*/));
+			x = printf(av[1] , atol(av[2])/*-2.0123456789*/);
+			printf("%d", x);
 		}
 		else
 		{
 			ft_putnbr(ft_printf(av[1] , av[2]));NL
-			ft_putnbr(printf(av[1] , av[2]));
+			x = printf(av[1] , av[2]);
+			printf("%d", x);
 		}
 	}
 //	if (ac == 3)
@@ -46,12 +52,12 @@ int		main(int ac, char **av)
 	//»·}
 	//»·else if (ac == 2)
 	//»·  ft_printf(av[1]);
-	int i;
+/*	int i;
 	if (ac == 2)
 	{
 		i = ft_atoi(av[1]);
 		printf("|%hhd|\n|%#10o|\n", (char)i, i);
-	}
+	}*/
 	//»·unsigned int a = 0xFFFF;
 	//»·unsigned int b = 0x0000;
 

@@ -22,6 +22,19 @@ int		ft_nb_len(long nb, int base)
 	return (i);
 }
 
+/*
+** 	Pfs->key:
+**	0x80: '#'
+**	0x40: '0'
+**	0x20: '+'
+**	0x10: ' '
+**
+**	0x08: '-''
+**	0x04: 'l'
+**	0x02: 'h'
+**	0x01:
+*/
+
 int		ft_parsing(char *str, t_pfs *pfs)
 {
 	int i;
@@ -41,7 +54,6 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			if (str[n] == '0' && !(pfs->key & 0x08))
 				pfs->key = pfs->key | 0x40;
 			pfs->pad = ft_max(ft_atoi(&str[n]), pfs->pad);
-			n += ft_nb_len(pfs->pad, 10) - 1;
 		}
 		else if (str[n] == '+')
 		{
@@ -74,9 +86,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			n += ft_nb_len(pfs->prec, 10) - 1;
 		}
 		if (ft_charcmpstr(str[n], "#+- .0123456789lh") < 0)
-		{
 			break ;
-		}
 	}
 	if (!str[i] || n < i)
 	{
@@ -97,7 +107,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_int(pfs);
 	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
 		fnc_oct(pfs);
-	else if ((str[i] == 'x' || str[i] == 'X') && (pfs->type = pfs->type | 0x08))
+	else if ((str[i] == 'x' || str[i] == 'X' || (str[i] == 'p' && (pfs->key = pfs->key | 0x80))) && (pfs->type = pfs->type | 0x08))
 		fnc_hexa(pfs);
 	else if (str[i] == 'f' && (pfs->type = pfs->type | 0x01))
 		fnc_float(pfs);
@@ -132,7 +142,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	}
 	while (pfs->pad-- > 0)
 		ft_putchar(' ');
-	return ((str[i] ? i + 1 : 0));
+	return ((str[i] ? i + 1 : i));
 }
 
 int		ft_printf(char *fmt, ...)
@@ -141,29 +151,25 @@ int		ft_printf(char *fmt, ...)
 	va_list	ap;
 	int		s;
 	int		e;
+	int		t;
 
-	pfs.key = 0;
-	pfs.type = 0;
+	ft_bzero(&pfs, sizeof(t_pfs));
 	va_start(pfs.ap, fmt);
 	s = 0;
 	e = -1;
-	pfs.prec = -1;
-	pfs.pad = -1;
-	pfs.len = 0;
-	pfs.strlen = 0;
+	pfs.prec = --pfs.pad;
 	while (fmt[++e])
 	{
-		if (fmt[e] == '%')
+		if (fmt[e] == '%' || fmt[e] == '{')
 		{
 			write(1, &fmt[s], e - s);
-			if (fmt[e + 1] != '%')
-			{
-				pfs.len += e - s;
-				s = e + ft_parsing(&fmt[e], &pfs);
-				e += s - e - 1;
-			}
+			pfs.len += e - s;
+			if (fmt[e] == '{')
+				t = ft_pfcolor(&fmt[e + 1], &pfs.len);
 			else
-				s = e++ + 1;
+				t = ft_parsing(&fmt[e], &pfs);
+			s = e + t;
+			e += s - e - 1;
 		}
 	}
 	pfs.len += e - s;
