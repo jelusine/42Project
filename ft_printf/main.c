@@ -17,25 +17,18 @@ int		main(int ac, char **av)
 {
 	int x;
 
-//	ft_color(SETCOL, "c");
-//	const char ok[4] = "test";
 	//»·long long l;
-	if (ac == 2)
-		ft_pfcolor(av[1], NULL);
 	//»·if (ac == 4)
 	//»·  ft_printf(av[1] , av[2], ft_atoi(av[3]));
 	//»·if (ac == 3)
 	//»·{
 	//»·  l = -2147483648000000000;
-
-//	write(1, ok, 1);NL
 	if (ac == 4)
 	{
 		if (av[3][0] == 'n')
 		{
-			ft_putnbr(ft_printf(av[1] , atol(av[2])/*-2.0123456789*/));
-			NL;
-			x = printf(av[1] , atol(av[2])/*-2.0123456789*/);
+			ft_putnbr(ft_printf(av[1] , atoll(av[2])/*-2.0123456789*/));NL;
+			x = printf(av[1] , atoll(av[2])/*-2.0123456789*/);
 			printf("%d", x);
 		}
 		else

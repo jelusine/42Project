@@ -55,18 +55,12 @@ int		ft_parsing(char *str, t_pfs *pfs)
 				pfs->key = pfs->key | 0x40;
 			pfs->pad = ft_max(ft_atoi(&str[n]), pfs->pad);
 		}
-		else if (str[n] == '+')
-		{
-			pfs->key = pfs->key | 0x20;
+		else if (str[n] == '+' && (pfs->key = pfs->key | 0x20))
 			pfs->key = pfs->key & 0xef;
-		}
 		else if (!(pfs->key & 0x20) && str[n] == ' ')
 			pfs->key = pfs->key | 0x10;
-		else if (str[n] == '-')
-		{
-			pfs->key = pfs->key | 0x08;
+		else if (str[n] == '-' && (pfs->key = pfs->key | 0x08))
 			pfs->key = pfs->key & 0xbf;
-		}
 		else if (!(pfs->key & 0x04) && str[n] == 'l')
 		{
 			pfs->key = pfs->key | 0x04;
@@ -80,11 +74,8 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			if (str[n + 1] == 'h')
 				pfs->key = pfs->key | 0x01;
 		}
-		else if (str[n] == '.')
-		{
-			pfs->prec = ft_atoi(&str[n + 1]);
+		else if (str[n] == '.' && (pfs->prec = ft_atoi(&str[n + 1])))
 			n += ft_nb_len(pfs->prec, 10) - 1;
-		}
 		if (ft_charcmpstr(str[n], "#+- .0123456789lh") < 0)
 			break ;
 	}
@@ -101,14 +92,14 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		fnc_char(pfs);
 	else if (str[i] == 's')
 		fnc_str(pfs);
-	else if (str[i] == 'u' && (pfs->type = pfs->type | 0x02))
+	else if ((str[i] == 'u') && (pfs->type = pfs->type | 0x02))
 		fnc_uint(pfs);
 	else if ((str[i] == 'd' || str[i] == 'i') && (pfs->type = pfs->type | 0x01))
 		fnc_int(pfs);
 	else if (str[i] == 'o' && (pfs->type = pfs->type | 0x04))
 		fnc_oct(pfs);
 	else if ((str[i] == 'x' || str[i] == 'X' || (str[i] == 'p' && (pfs->key = pfs->key | 0x80))) && (pfs->type = pfs->type | 0x08))
-		fnc_hexa(pfs);
+		fnc_oct(pfs);
 	else if (str[i] == 'f' && (pfs->type = pfs->type | 0x01))
 		fnc_float(pfs);
 	pfs->pad -= ft_max(pfs->prec, pfs->strlen - (pfs->str[0] == '-' && pfs->type & 0x0f ? 1 : 0)) - (!(pfs->prec || pfs->str[0] != '0') && pfs->pad > 0 ? 1 : 0);
@@ -121,7 +112,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	if (pfs->type & 0x01 && pfs->key & 0x30 && pfs->str[0] != '-')
 		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
 	if (pfs->type & 0x0c && pfs->str[0] != '0' && pfs->key & 0x80 && (pfs->len += (pfs->type & 0x0c) / 4))
-		write(1, (str[i] == 'x' ? "0x" : "0X"), (pfs->type & 0x0c) / 4);
+		write(1, (str[i] == 'X' ? "0X" : "0x"), (pfs->type & 0x0c) / 4);
 	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
 	{
 		if (pfs->str[0] == '-' && ++t && pfs->strlen--)
@@ -133,8 +124,8 @@ int		ft_parsing(char *str, t_pfs *pfs)
 			ft_putchar('0');
 	}
 	n = -1;
-	while (str[i] == 'x' && pfs->str[++n])
-		pfs->str[n] = ft_tolower(pfs->str[n]);
+	while (str[i] == 'X' && pfs->str[++n])
+		pfs->str[n] = ft_toupper(pfs->str[n]);
 	if ((pfs->prec || pfs->str[0] != '0' || (pfs->key & 0x80 && pfs->type & 0x04)) && ++pfs->len)
 	{
 		write(1, &pfs->str[t], pfs->strlen);

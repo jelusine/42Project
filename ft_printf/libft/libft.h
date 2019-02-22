@@ -116,7 +116,7 @@ int				ft_atoi_base(const char *str, const char *base);
 int				get_next_line(int fd, char **line);
 int				ft_errormsg(char const *str);
 int				ft_swap(int *a, int *b);
-char			*ft_itoa_base(long  nb, int base);
+char			*ft_itoa_base(long long int nb, int base);
 char			**ft_split(const char *str, char *kwords);
 void			ft_putnbr_base(int nbr, const char *base);
 void			ft_color(const char *str, const char *color);
