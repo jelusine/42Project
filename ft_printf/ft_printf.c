@@ -76,7 +76,7 @@ int		ft_parsing(char *str, t_pfs *pfs)
 		}
 		else if (str[n] == '.' && (pfs->prec = ft_atoi(&str[n + 1])))
 			n += ft_nb_len(pfs->prec, 10) - 1;
-		if (ft_charcmpstr(str[n], "#+- .0123456789lh") < 0)
+		if (ft_charcmpstr(str[n], "#+- .0123456789lhL") < 0)
 			break ;
 	}
 	if (!str[i] || n < i)
@@ -111,7 +111,8 @@ int		ft_parsing(char *str, t_pfs *pfs)
 	}
 	if (pfs->type & 0x01 && pfs->key & 0x30 && pfs->str[0] != '-')
 		ft_putchar(21 + (pfs->key & 0x30) * 11 / 16);
-	if (pfs->type & 0x0c && pfs->str[0] != '0' && pfs->key & 0x80 && (pfs->len += (pfs->type & 0x0c) / 4))
+	if (pfs->key & 0x80 && (pfs->str[0] != '0' || str[i] == 'p')
+		&& pfs->type & 0x0c && (pfs->len += (pfs->type & 0x0c) / 4))
 		write(1, (str[i] == 'X' ? "0X" : "0x"), (pfs->type & 0x0c) / 4);
 	if (pfs->prec > 0 || (pfs->key & 0x40 && pfs->pad > -1))
 	{

@@ -27,8 +27,8 @@ int		main(int ac, char **av)
 	{
 		if (av[3][0] == 'n')
 		{
-			ft_putnbr(ft_printf(av[1] , atoll(av[2])/*-2.0123456789*/));NL;
-			x = printf(av[1] , atoll(av[2])/*-2.0123456789*/);
+			ft_putnbr(ft_printf(av[1] , /*atoll(av[2])*/FTEST));NL;
+			x = printf(av[1] , /*atoll(av[2])*/FTEST);
 			printf("%d", x);
 		}
 		else

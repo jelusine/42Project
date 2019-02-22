@@ -50,11 +50,8 @@ int		ft_unb_len(unsigned int nb, unsigned int base)
 
 void	fnc_char(t_pfs *pfs)
 {
-	char c;
-
-	c = va_arg(pfs->ap, int);
 	pfs->str = ft_strdup("0");
-	pfs->str[0] = c;
+	pfs->str[0] = va_arg(pfs->ap, int);
 	pfs->strlen = 1;
 	pfs->prec = -1;
 }
@@ -154,8 +151,12 @@ void fnc_float(t_pfs *pfs)
 		f *= -1;
 	p = 1;
 	x = 1;
-	while (--pfs->prec > 0 && (x *= 10))
-		pfs->str[k + p++] = 48 + ft_abs((int)(f * x)) % 10;
+	//f -= (long int)f;
+	while (--pfs->prec > 0/* && (x *= 10)*/)
+	{
+		f = (f - (long)f) * 10;
+		pfs->str[k + p++] = 48 + ft_abs((int)(f/* * x*/)) % 10;
+	}
 	pfs->str[k + (p == 1 ? 0 : p)] = 0;
 	pfs->strlen = ft_strlen(pfs->str);
 	if ((pfs->str[0] == '-' || pfs->key & 0x30) && ++pfs->len)

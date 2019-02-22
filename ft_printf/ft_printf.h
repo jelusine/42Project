@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <stdarg.h>
 # include <math.h>
+# define FTEST 9.999990
 # define HEXAL "0123456789abcdef"
 # define HEXAU "0123456789ABCDEF"
 # define SETCOL "red\0green\0yellow\0blue\0purple\0cyan\0white\0eoc"
