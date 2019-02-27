@@ -23,12 +23,16 @@ int		main(int ac, char **av)
 	//»·if (ac == 3)
 	//»·{
 	//»·  l = -2147483648000000000;
+	if (ac == 3)
+	{
+		printf("|%f|\n", 9.9 + ft_pow(ft_atoi(av[1]), ft_atoi(av[2])));
+	}
 	if (ac == 4)
 	{
 		if (av[3][0] == 'n')
 		{
-			ft_putnbr(ft_printf(av[1] , /*atoll(av[2])*/FTEST));NL;
-			x = printf(av[1] , /*atoll(av[2])*/FTEST);
+			ft_putnbr(ft_printf(av[1] , atoll(av[2])/*FTEST*/));NL;
+			x = printf(av[1] , atoll(av[2])/*FTEST*/);
 			printf("%d", x);
 		}
 		else

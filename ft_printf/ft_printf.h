@@ -18,7 +18,7 @@
 # include <unistd.h>
 # include <stdarg.h>
 # include <math.h>
-# define FTEST 9.999990
+# define FTEST 0.999990
 # define HEXAL "0123456789abcdef"
 # define HEXAU "0123456789ABCDEF"
 # define SETCOL "red\0green\0yellow\0blue\0purple\0cyan\0white\0eoc"
@@ -66,5 +66,6 @@ void			fnc_unsbas(t_pfs *pfs, int i);
 int 		  ft_pfcolor(const char *str, int *pflen);
 int				ft_nb_len(long nb, int base);
 int				ft_printf(char *fmt, ...);
+double		ft_pow(int n, int p);
 
 #endif
