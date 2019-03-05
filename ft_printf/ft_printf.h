@@ -21,7 +21,7 @@
 # define FTEST 0.999990
 # define HEXAL "0123456789abcdef"
 # define HEXAU "0123456789ABCDEF"
-# define SETCOL "red\0green\0yellow\0blue\0purple\0cyan\0white\0eoc"
+# define SETCOL "red\0green\0yellow\0blue\0purple\0cyan\0white\0eoc\0"
 
 typedef struct	s_dbl
 {
@@ -51,21 +51,22 @@ typedef struct	s_pfs
 	int				len;
 	char			*str;
 	int				strlen;
+	char			col;
 }								t_pfs;
 
 void			fnc_char(t_pfs *pfs);
+void			fnc_str(t_pfs *pfs);
 void			fnc_int(t_pfs *pfs);
 void			fnc_uint(t_pfs *pfs);
-void			ft_putinfnbr(long long int l);
-void			ft_putinfnbr_base(long long int l, char *base);
-void			fnc_long(t_pfs *pfs);
-void			fnc_str(t_pfs *pfs);
 void			fnc_oct(t_pfs *pfs);
 void 			fnc_float(t_pfs *pfs);
-void			fnc_unsbas(t_pfs *pfs, int i);
-int 		  ft_pfcolor(const char *str, int *pflen);
+int 		  ft_pfcolor(const char *str, int *pflen, char *col);
 int				ft_nb_len(long nb, int base);
 int				ft_printf(char *fmt, ...);
 double		ft_pow(int n, int p);
+int		ft_nb_len(long nb, int base);
+int		ft_putnchar(char c, int n);
+int		ft_strtoupper(char *str);
+char	*ft_utoa_base(unsigned long nb, unsigned int tbse);
 
 #endif

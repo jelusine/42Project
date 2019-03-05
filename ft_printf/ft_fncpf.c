@@ -6,59 +6,11 @@
 /*   By: jelusine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/06 02:10:00 by jelusine          #+#    #+#             */
-/*   Updated: 2019/01/22 21:29:55 by jelusine         ###   ########.fr       */
+/*   Updated: 2019/03/05 07:59:07 by jelusine         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-
-double		ft_pow(int n, int p)
-{
-	double	nb;
-	int			np;
-
-	nb = 1;
-	np = ft_abs(p);
-	while (np-- > 0)
-		nb *= n;
-	return ((p < 0 ? 1 / nb : nb));
-}
-
-char	*ft_utoa_base(unsigned long nb, unsigned int tbse)
-{
-	char		*str;
-	unsigned long		i;
-	int			n;
-	const char	*base = "0123456789ABCDEF";
-
-	if (tbse < 2 || 16 < tbse)
-		return (0);
-	n = 1;
-	i = nb;
-	while (i >= tbse && ++n)
-		i /= tbse;
-	if (!(str = (char *)malloc(sizeof(char) * (n + 1))))
-		return (NULL);
-	str[n--] = '\0';
-	str[0] = '0';
-	i = nb;
-	while (i >= 1)
-	{
-		str[n--] = base[i % tbse];
-		i /= tbse;
-	}
-	return (str);
-}
-
-int		ft_unb_len(unsigned int nb, unsigned int base)
-{
-	int	i;
-
-	i = 1;
-	while (base <= nb && ++i)
-		nb /= base;
-	return (i);
-}
 
 void	fnc_char(t_pfs *pfs)
 {
@@ -131,52 +83,10 @@ void	fnc_oct(t_pfs *pfs)
 	else if ((pfs->key & 0x05) == 5)
 		pfs->str = ft_itoa_base(o, 2 * (pfs->type & 0x0c));
 	else if (pfs->key & 0x02)
-			pfs->str = ft_itoa_base((unsigned short int)o, 2 * (pfs->type & 0x0c));
+		pfs->str = ft_itoa_base((unsigned short int)o, 2 * (pfs->type & 0x0c));
 	else if (pfs->key & 0x04)
 		pfs->str = ft_itoa_base((unsigned long int)o, 2 * (pfs->type & 0x0c));
 	else
 		pfs->str = ft_itoa_base((unsigned int)o, 2 * (pfs->type & 0x0c));
 	pfs->strlen = ft_strlen(pfs->str);
-}
-
-void fnc_float(t_pfs *pfs)
-{
-	double 	f;
-	double 	ff;
-	char		*str;
-	int			k;
-	int 		p;
-	int			t;
-
-	f = va_arg(pfs->ap, typeof(f));
- 	if (pfs->prec < 0)
-		pfs->prec = 6;
-	if (pfs->prec)
-	{
-		t = ++pfs->prec + 1;
-		ff = f;
-		while (--t > 0)
-			ff = (ff - (long)ff) * 10;
-		if ((int)ff % 10 >= 5 || -1 >= (int)ff % 10)
-			f += ft_pow(10, -(pfs->prec - 1)) * (f > 0 ? 1 : -1);
-	}
-	str = ft_itoa_base(f, 10);
-	k = ft_strlen(str);
-	if (!(pfs->str = (char *)malloc(sizeof(char) * (k + pfs->prec + 1))))
-		return ;
-	ft_strcpy(pfs->str, str);
-	ft_strdel(&str);
-	pfs->str[k] = '.';
-	if (f < 0)
-		f *= -1;
-	p = 1;
-	while (--pfs->prec > 0)
-	{
-		f = (f - (long)f) * 10;
-		pfs->str[k + p++] = 48 + ft_abs((int)f) % 10;
-	}
-	pfs->str[k + (p == 1 ? 0 : p)] = 0;
-	pfs->strlen = ft_strlen(pfs->str);
-	if ((pfs->str[0] == '-' || pfs->key & 0x30) && ++pfs->len)
-		pfs->pad--;
 }
